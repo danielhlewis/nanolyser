@@ -30,85 +30,99 @@ class GrapherController < ApplicationController
     require 'uri'
     #require 'xml'
     
-    xml = Net::HTTP.get URI.parse("http://www.nanowrimo.org/wordcount_api/wchistory/#{id}")
+    #xml = Net::HTTP.get URI.parse("http://www.nanowrimo.org/wordcount_api/wchistory/#{id}")
     
-#     xml = '<?xml version="1.0" standalone="yes"?><!DOCTYPE wchistory [
-#                   <!ELEMENT wchistory (uid, error, uname, user_wordcount, wordcounts)>
-#                   <!ELEMENT uid (#PCDATA)>
-#                   <!ELEMENT error (#PCDATA)>
-#                   <!ELEMENT uname (#PCDATA)>
-#                   <!ELEMENT user_wordcount (#PCDATA)>
-#                   <!ELEMENT wordcounts (wcentry+)>
-#                   <!ELEMENT wcentry (wc,wcdate)>
-#                   <!ELEMENT wc (#PCDATA)>
-#                   <!ELEMENT wcdate (#PCDATA)>
-#                 ]>
-#                 <wchistory>
-#                 <uid>427542</uid>
-#                 <uname>coolest_moniker_ever</uname>
-#                 <user_wordcount>7803</user_wordcount>
-#                 <wordcounts>
-#                 <wcentry>
-#                 <wc>1803</wc>
-#                 <wcdate>2010-11-01</wcdate>
-#                 </wcentry>
-#                 <wcentry>
-#                 <wc>2803</wc>
-#                 <wcdate>2010-11-02</wcdate>
-#                 </wcentry>
-#                 <wcentry>
-#                 <wc>5803</wc>
-#                 <wcdate>2010-11-03</wcdate>
-#                 </wcentry>
-#                 <wcentry>
-#                 <wc>7803</wc>
-#                 <wcdate>2010-11-04</wcdate>
-#                 </wcentry>
-#                 <wcentry>
-#                 <wc>7803</wc>
-#                 <wcdate>2010-11-05</wcdate>
-#                 </wcentry>
-#                 <wcentry>
-#                 <wc>7803</wc>
-#                 <wcdate>2010-11-06</wcdate>
-#                 </wcentry>
-#                 <wcentry>
-#                 <wc>9803</wc>
-#                 <wcdate>2010-11-07</wcdate>
-#                 </wcentry>
-#                 <wcentry>
-#                 <wc>12803</wc>
-#                 <wcdate>2010-11-08</wcdate>
-#                 </wcentry>
-#                 <wcentry>
-#                 <wc>15803</wc>
-#                 <wcdate>2010-11-09</wcdate>
-#                 </wcentry>
-#                 <wcentry>
-#                 <wc>21803</wc>
-#                 <wcdate>2010-11-10</wcdate>
-#                 </wcentry>
-#                 <wcentry>
-#                 <wc>21803</wc>
-#                 <wcdate>2010-11-11</wcdate>
-#                 </wcentry>
-#                 </wordcounts>
-#                 </wchistory>'
+    xml = '<?xml version="1.0" standalone="yes"?><!DOCTYPE wchistory [
+                  <!ELEMENT wchistory (uid, error, uname, user_wordcount, wordcounts)>
+                  <!ELEMENT uid (#PCDATA)>
+                  <!ELEMENT error (#PCDATA)>
+                  <!ELEMENT uname (#PCDATA)>
+                  <!ELEMENT user_wordcount (#PCDATA)>
+                  <!ELEMENT wordcounts (wcentry+)>
+                  <!ELEMENT wcentry (wc,wcdate)>
+                  <!ELEMENT wc (#PCDATA)>
+                  <!ELEMENT wcdate (#PCDATA)>
+                ]>
+                <wchistory>
+                <uid>427542</uid>
+                <uname>coolest_moniker_ever</uname>
+                <user_wordcount>7803</user_wordcount>
+                <wordcounts>
+                <wcentry>
+                <wc>1803</wc>
+                <wcdate>2011-11-01</wcdate>
+                </wcentry>
+                <wcentry>
+                <wc>2803</wc>
+                <wcdate>2011-11-02</wcdate>
+                </wcentry>
+                <wcentry>
+                <wc>5803</wc>
+                <wcdate>2011-11-03</wcdate>
+                </wcentry>
+                <wcentry>
+                <wc>7803</wc>
+                <wcdate>2011-11-04</wcdate>
+                </wcentry>
+                <wcentry>
+                <wc>7803</wc>
+                <wcdate>2011-11-05</wcdate>
+                </wcentry>
+                <wcentry>
+                <wc>7803</wc>
+                <wcdate>2011-11-06</wcdate>
+                </wcentry>
+                <wcentry>
+                <wc>9803</wc>
+                <wcdate>2011-11-07</wcdate>
+                </wcentry>
+                <wcentry>
+                <wc>12803</wc>
+                <wcdate>2011-11-08</wcdate>
+                </wcentry>
+                <wcentry>
+                <wc>15803</wc>
+                <wcdate>2011-11-09</wcdate>
+                </wcentry>
+                <wcentry>
+                <wc>21803</wc>
+                <wcdate>2011-11-10</wcdate>
+                </wcentry>
+                <wcentry>
+                <wc>21803</wc>
+                <wcdate>2011-11-11</wcdate>
+                </wcentry>
+                </wordcounts>
+                </wchistory>'
     
-    parser, parser.string = XML::Parser.new, xml
-    doc, wcentries = parser.parse, []
-    puts xml
-
-    if doc.find('//wchistory/uname').first.nil?
+    doc = Hpricot.XML(xml)
+    
+    if doc.at("uname").nil?
       return nil, "Invalid id: #{id}"
     end
     
-    username = doc.find('//wchistory/uname').first.content.strip
-    wordcount = doc.find('//wchistory/user_wordcount').first.content.strip
+    username = doc.at("uname").inner_html
+    wordcount = doc.at("user_wordcount").inner_html
 
-    doc.find('//wchistory/wordcounts/wcentry').each do |p|
-      wcentries << {:date => p.find("wcdate").first.content.strip, :wc => p.find("wc").first.content.strip.to_i}
+    wcentries = []
+    (doc/"//wchistory/wordcounts/wcentry").each do |p|
+      wcentries << {:date => p.find_element("wcdate").inner_html, :wc => p.find_element("wc").inner_html.to_i}
     end
+    
+#     parser, parser.string = XML::Parser.new, xml
+#     doc, wcentries = parser.parse, []
+#     puts xml
+# 
+#     if doc.find('//wchistory/uname').first.nil?
+#       return nil, "Invalid id: #{id}"
+#     end
+#     
+#     username = doc.find('//wchistory/uname').first.content.strip
+#     wordcount = doc.find('//wchistory/user_wordcount').first.content.strip
+# 
+#     doc.find('//wchistory/wordcounts/wcentry').each do |p|
+#       wcentries << {:date => p.find("wcdate").first.content.strip, :wc => p.find("wc").first.content.strip.to_i}
+#     end
 
     stats = {:username => username, :wc => wordcount}
     
@@ -121,7 +135,7 @@ class GrapherController < ApplicationController
     end
     
     wcentries.each do |e|
-      wordcounts[(Date.parse(wcentries[wcentries.size - 1][:date]) - Date.parse("November 1, 2011")).to_i] = e[:wc]
+      wordcounts[(Date.parse(e[:date]) - Date.parse("November 1, 2011")).to_i] = e[:wc]
     end
     
     last_wordcount = 0
@@ -210,7 +224,7 @@ class GrapherController < ApplicationController
       else
         written = day[:wc] - days[i-1][:wc]
       end
-      current_weekday_name = weekday_names[(Date.parse("2010-11-01") + i.days).cwday - 1]
+      current_weekday_name = weekday_names[(Date.parse("2011-11-01") + i.days).cwday - 1]
       weekday_stats[current_weekday_name][:written] += written
       if day[:wc] >= day[:dt]
         weekday_stats[current_weekday_name][:successes] += 1
