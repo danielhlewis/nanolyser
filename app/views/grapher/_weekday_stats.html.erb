@@ -1,0 +1,22 @@
+<p><u>Stats by Weekday</u></p>
+<table width=75% align=center>
+<tr>
+  <td>Day of Week</td><td>Total Days</td><td>Total Words</td><td>Average Words</td><td>Goal Met</td><td>Goal Not Met</td><td>Rate of Success</td>
+</tr>
+<% weekday_names = %w(Sunday Monday Tuesday Wednesday Thursday Friday Saturday) %>
+<% weekday_names.each do |name| %>
+  <tr>  
+    <% weekday = stats[:weekday_stats][name] %>
+    <%#= debug stats %>
+    <%#= debug weekday %>
+    <% day_count = weekday[:successes].to_i + weekday[:failures].to_i + weekday[:pending].to_i %>
+    <td><%= name %></td>
+    <td><%= "#{day_count}" %></td>
+    <td><%= "#{weekday[:written]}" %></td>
+    <td><%= if (day_count == 0) then "N/A" else "#{weekday[:written].to_i / (weekday[:successes].to_i + weekday[:failures].to_i + weekday[:pending].to_i)}" end %></td>
+    <td><%= "#{weekday[:successes]}" %></td>
+    <td><%= "#{weekday[:failures]}" %></td>
+    <td><%= if (weekday[:successes].to_i + weekday[:failures].to_i == 0) then "N/A" else "#{((weekday[:successes].to_i * 1.0 / (weekday[:successes].to_i + weekday[:failures].to_i)).round(2) * 100).to_i}%" end %></td>
+  </tr>
+<% end %>
+</table>

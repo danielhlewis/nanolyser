@@ -1,0 +1,88 @@
+<script language="javascript" type="text/javascript">
+  $(function () {
+    
+    var data = [
+		<% if not data[:above_dynamic].nil? %>
+		  { bars: {"show":true,"align":"center", "barWidth":24*60*60*1000}, label: "Mission Accomplished!", 
+		    data: <%= ActiveSupport::JSON.encode(data[:above_dynamic][:data]) %>,
+		 	color: "#4da74d" },
+		<% end %>
+		<% if not data[:above_static].nil? %>
+		  { bars: {"show":true,"align":"center", "barWidth":24*60*60*1000}, label: "Ahead of Schedule", 
+			data: <%= ActiveSupport::JSON.encode(data[:above_static][:data]) %>,
+			color: "#edc240" },
+		<% end %>
+		<% if not data[:below_static].nil? %>
+		  { bars: {"show":true,"align":"center", "barWidth":24*60*60*1000}, label: "Behind Schedule", 
+			data: <%= ActiveSupport::JSON.encode(data[:below_static][:data]) %>,
+			color: "#cb4b4b" },
+		<% end %>
+		<% if not data[:freewriting].nil? %>
+		  { bars: {"show":true,"align":"center", "barWidth":24*60*60*1000}, label: "Freewriting", 
+			data: <%= ActiveSupport::JSON.encode(data[:freewriting][:data]) %>,
+			color: "blue" },
+		<% end %>
+		<% if not data[:static_goal].nil? %>
+		  { label: "Static Goal", data: <%= ActiveSupport::JSON.encode(data[:static_goal][:data]) %>,
+		 	color: "#777777" },
+		<% end %>
+		<% if not data[:dynamic_goal].nil? %>
+		  { label: "Dynamic Goal", data: <%= ActiveSupport::JSON.encode(data[:dynamic_goal][:data]) %>,
+		    color: "#8fb8ff" }
+		<% end %>
+		];
+		
+	var options = { grid: {"hoverable":true}, legend: {"position":"nw"}, 
+                        xaxis: {"mode":"time", "timeformat": "%b %d, %y", "minTickSize": [1, 'day'],
+                                /*monthNames: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]*/}}
+    
+    var plotarea = $("#placeholder");
+    
+    $.plot( plotarea , data , options );
+
+    function showTooltip(x, y, contents) {
+        $('<div id="tooltip">' + contents + '</div>').css( {
+            position: 'absolute',
+            display: 'none',
+            top: y + 5,
+            left: x + 5,
+            border: '1px solid #fdd',
+            padding: '2px',
+            'background-color': '#fee',
+            opacity: 0.80
+        }).appendTo("body").fadeIn(200);
+    }
+ 
+    var previousPoint = null;
+    var previousLabel = null;
+    $("#placeholder").bind("plothover", function (event, pos, item) {
+        
+            if (item) {
+                if (previousPoint != item.dataIndex ||
+                    previousLabel != item.series.label) {
+                    previousPoint = item.dataIndex;
+                    previousLabel = item.series.label;
+                    
+                    $("#tooltip").remove();
+                    var x = item.datapoint[0],
+                        y = item.datapoint[1];
+                    var d = new Date(x);
+                    var month = d.getUTCMonth()
+                    var day = d.getUTCDate()
+                    var year = d.getUTCFullYear()
+                    var monthName = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+                    
+                    showTooltip(item.pageX + 5, item.pageY + 5,
+                                monthName[month] + " " + day + ", " + year + ": <br/>" + item.series.label + " - " + y);
+                }
+            }
+            else {
+                $("#tooltip").remove();
+                previousPoint = null;            
+            }
+        
+    });
+
+
+  });
+</script>

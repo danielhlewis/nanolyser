@@ -1,0 +1,21 @@
+<tr><td colspan=4> &nbsp </td></tr>
+<tr>
+	<td colspan=4><u>Total Progress</u></td>
+</tr>
+<tr>
+	<%= raw generate_cells("wordcount_today", stats, "Total Words Written", false) %>
+	<%= raw generate_cells("words_remaining_total", stats) %>
+	
+</tr>
+<tr bgcolor=#F9F9F9>
+	<%= raw generate_cells("day_today", stats) %>
+	<%= raw generate_cells("days_remaining_total", stats) %>
+</tr>
+<tr>
+        <%= raw generate_cells("written_goal_today", stats, "Words per Day Required to Finish On Time")%>
+        <%= raw generate_cells("end_date", stats) %>
+</tr>
+<tr bgcolor=#F9F9F9>
+        <%= raw generate_cells("average_pace", stats)%>
+        <%= raw generate_cells("current_end_date", stats)%>
+</tr>

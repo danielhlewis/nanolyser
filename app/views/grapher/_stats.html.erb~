@@ -1,0 +1,19 @@
+<tr>
+	<td colspan=4><u>Today's Stats</u></td>
+</tr>
+<tr>
+	<%= generate_cells("written_today", stats) %>
+	<%= generate_cells("wordcount_today", stats) %>
+</tr>
+<tr bgcolor=#F9F9F9>
+	<%= generate_cells("written_goal_today", stats) %>
+	<%= generate_cells("personal_goal_today", stats)%>
+</tr>
+<tr>
+	<%= generate_cells("words_remaining_today", stats) %>
+	<%= generate_cells("static_goal_today", stats)%>
+</tr>
+<tr bgcolor=#F9F9F9>
+	<%= generate_cells("current_streak", stats) %>
+	<%= generate_cells("overall_status", stats) %>
+</tr>

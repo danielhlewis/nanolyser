@@ -1,0 +1,22 @@
+<tr><td colspan=4> &nbsp </td></tr>
+<tr>
+	<td colspan=4><u>History</u></td>
+</tr>
+<tr>
+	<td align=left>Successful Days:</td>
+	<td align=right><%= stats[:successful_days] %> &nbsp</td>
+	<td align=left>Unsuccessful Days:</td>
+	<td align=right><%= stats[:unsuccessful_days] %> &nbsp</td>
+</tr>
+<tr bgcolor=#F9F9F9>
+	<td align=left>Best Streak:</td>
+	<td align=right><%= stats[:max_success_streak] %> Day<% if stats[:max_success_streak] != 1 %>s<% end %> &nbsp</td>
+	<td align=left>Worst Streak:</td>
+	<td align=right><%= stats[:max_fail_streak] %> Day<% if stats[:max_fail_streak] != 1 %>s<% end %> &nbsp</td>
+</tr>
+<tr>
+	<td align=left>Time Spent Ahead of Schedule:</td>
+	<td align=right><%= stats[:days_ahead] %> Day<% if stats[:days_ahead] != 1 %>s<% end %> &nbsp</td>
+	<td align=left>Time Spent Behind Schedule:</td>
+	<td align=right><%= stats[:days_behind] %> Day<% if stats[:days_behind] != 1 %>s<% end %> &nbsp</td>
+</tr>

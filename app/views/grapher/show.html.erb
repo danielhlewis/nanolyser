@@ -1,0 +1,39 @@
+<% content_for :head do %>
+  <%= javascript_include_tag "flot/jquery.flot.js" %>
+<% end %>
+
+  <% if @error.nil? %>
+    <%#= debug @data %>
+    <p><%= @data[:stats][:username] %>'s Current NaNoWriMo Progress</p>
+    <p>
+        <%#=h "Graph will be offline until approximately 6:00PM CST.  Sorry for the inconvenience!" %>
+        <%#= @data[:main_graph]  %>
+        <div align=center>
+          <div align=center>
+            <div id="placeholder" style="width:800px;height:500px"></div>
+          </div>
+          <%= render :partial => "flot", :locals => {:data => @flot_data} %>
+        </div>
+    </p>
+    <p><u>General Stats</u></p>
+    <p>
+    <table width=100% align=center>			
+    <%= render :partial => "stats", :locals => {:stats => @data[:stats]} %>
+    <%= render :partial => "planning_stats", :locals => {:stats => @data[:stats]} %>
+    <%= render :partial => "trend_stats", :locals => {:stats => @data[:stats]} %>
+    </table>
+    <%= render :partial => "weekday_stats", :locals => {:stats => @data[:stats]} %>
+    </p>
+    <p><%#= @data[:weekday_graph] %></p>
+    <p>Nanolyse Again?<br/>
+    <% form_tag url_for(:controller => "grapher", :action => "show"), :method => "get" do %>
+      NaNoWriMo id: <%= text_field_tag 'id', params[:id] %><br/>
+      NaNoWriMo goal: <%= text_field_tag 'target', params[:target]%><br/>
+      <p><%= submit_tag 'Nanolyse!' %></p>
+    <% end %>
+  <% else %>
+    <%= @error %>
+  <% end %>
+  <br/>
+
+
