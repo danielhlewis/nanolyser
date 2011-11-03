@@ -2,12 +2,12 @@
 <p>The Nanolyser generates stats for any NaNoWriMo participant based on their NaNoWriMo User Name.</p>
 <p>What is your user name?<br/>
 <p>
-<% form_tag url_for(:controller => "grapher", :action => "show"), :method => "get" do %>
+<%= form_tag url_for(:controller => "grapher", :action => "show"), :method => "get" do %>
     <%= text_field_tag 'id'%><br/>
     <p>How many words do you want to write?<p/>
     <p><%= text_field_tag 'target', 50000%></p>
     <%= submit_tag 'Nanolyse!' %>
-<% end %>
+<%= end %>
 <p>
 <b>Note:</b> The new NaNoWriMo <%= link_to "Word Count API", "http://nanowrimo.org/en/wordcount_api" %> hasn't been finalized and seems to sometimes return *interesting* results.  It works most of the time, but be prepared for some amount of erratic behavior until the API is officially released.<br/>Happy NaNo-ing!
 </p>

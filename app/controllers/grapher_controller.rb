@@ -28,7 +28,7 @@ class GrapherController < ApplicationController
     # My Id = 427542
     require 'net/http'
     require 'uri'
-    require 'xml'
+    #require 'xml'
     
     xml = Net::HTTP.get URI.parse("http://www.nanowrimo.org/wordcount_api/wchistory/#{id}")
     

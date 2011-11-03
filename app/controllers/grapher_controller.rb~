@@ -149,7 +149,7 @@ class GrapherController < ApplicationController
     unsuccessful_days = 0
     days = []
     number_of_days.times do |i|
-      day = {:date => Date.parse("2010-11-#{i + 1}")}
+      day = {:date => Date.parse("2011-11-#{i + 1}")}
       day[:st] = ((target_wordcount / (number_of_days * 1.0)) * (i + 1)).round(0).to_i
       if (wordcounts.size > i)
         day[:wc] = wordcounts[i]

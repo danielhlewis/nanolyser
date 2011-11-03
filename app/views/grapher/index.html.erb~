@@ -17,6 +17,6 @@
 <p>
 <b>Known Issues:</b><br/>
 * If you enter your user name correctly, but it tells you it is invalid, try refreshing the page once or twice.  This seems to be a bug in the API.<br/>
-* It will always display stats as of the last day you submitted a word count to the NaNoWriMo website.  This may be an unavoidable consequence of changes made to the data the API provides.<br/>
+* It will always display stats as of the last day you submitted a word count to the NaNoWriMo website.  This may be an unavoidable consequence of changes in the data the API provides.<br/>
 </p>
 
