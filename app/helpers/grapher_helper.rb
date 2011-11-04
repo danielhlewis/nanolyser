@@ -61,9 +61,14 @@ module GrapherHelper
       end
       return "Completed!"
     else
+      
       pace = average_pace(stats, day).to_i
-      days_to_complete = (1.0 * stats[:target_wordcount] / pace).ceil
-      return (Date.parse("2011-11-01") + (days_to_complete - 1).days).to_s
+      if pace == 0
+	return "The End of Time!"
+      else
+	days_to_complete = (1.0 * stats[:target_wordcount] / pace).ceil
+	return (Date.parse("2011-11-01") + (days_to_complete - 1).days).to_s
+      end
     end
   end
   

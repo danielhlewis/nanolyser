@@ -26,7 +26,7 @@ module GrapherHelper
 	label = "Current Status"
 	value = overall_status(stats, stats[:current_day])
       when "day_today"
-	label = "Current Day"
+	label = "Last Recorded Day"
 	value = (stats[:current_day].to_i + 1).to_s
       when "words_remaining_total"
 	label = "Total Words Remaining"
@@ -61,9 +61,14 @@ module GrapherHelper
       end
       return "Completed!"
     else
+      debugger
       pace = average_pace(stats, day).to_i
-      days_to_complete = (1.0 * stats[:target_wordcount] / pace).ceil
-      return (Date.parse("2011-11-01") + (days_to_complete - 1).days).to_s
+      if pace == 0
+	return "The End of Time!"
+      else
+	days_to_complete = (1.0 * stats[:target_wordcount] / pace).ceil
+	return (Date.parse("2011-11-01") + (days_to_complete - 1).days).to_s
+      end
     end
   end
   
