@@ -134,16 +134,19 @@ class GrapherController < ApplicationController
       wordcounts << 0
     end
     
+    wcsum = 0
     wcentries.each do |e|
-      wordcounts[(Date.parse(e[:date]) - Date.parse("November 1, 2011")).to_i] = e[:wc]
+      wcsum += e[:wc]
+      wordcounts[(Date.parse(e[:date]) - Date.parse("November 1, 2011")).to_i] = wcsum
+      #wordcounts[(Date.parse(e[:date]) - Date.parse("November 1, 2011")).to_i] = e[:wc]
     end
     
     last_wordcount = 0
-    wordcounts.each do |e|
-      if e == 0
-        e = last_wordcount
+    (0..wordcounts.size).each do |i|
+      if wordcounts[i] == 0
+        wordcounts[i] = last_wordcount
       else
-        last_wordcount = e
+        last_wordcount = wordcounts[i]
       end
     end
     
